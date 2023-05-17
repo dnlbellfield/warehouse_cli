@@ -10,29 +10,34 @@ class ResupplyController extends CommandController
     {
 
       $item = new Item;
+      $type = '';
       $data = [
-        'type' => 'minus',
-        'sku' => $this->getParam('sku'),
-        'number'=> 2,
+     
+        'sku' => '',
+        'number'=> 0
       ];
-      
+
       if($this->hasParam('sku')) {
-       $data['sku'] = $this->getParam('sku')
+       $data['sku'] = $this->getParam('sku');
 
         if($this->hasParam('minus')) {
-          $data['type'] = 'minus';
+         $type = 'minus';
           $data['number'] = $this->getParam('minus');
-
         }
+
         if($this->hasParam('plus')) {
-          $data['type'] = 'plus';
+          $type = 'plus';
           $data['number'] = $this->getParam('plus');
         }
+
         if($this->hasParam('equal')) {
-          $data['type'] = 'equal';
+          $type = 'equal';
           $data['number'] = $this->getParam('equal');
         
         }
-      }
+
+        $item->update($data, $type);
+        $this->getPrinter()->out("Updated Successfully \r\n");
     }
+}
 }

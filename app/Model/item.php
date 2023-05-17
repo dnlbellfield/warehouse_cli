@@ -1,9 +1,7 @@
 <?php
-
 namespace App\Model;
 use App\Core\DBConnection;
 use PDO;
-
 
 class Item {
 
@@ -24,16 +22,26 @@ class Item {
         ]
     );
 }
-
-
   public function insert($data){
     $statement = $this->pdo->prepare("INSERT INTO items (sku, title, quantity, company, location, created_at, updated_at) VALUES (:sku, :title, :quantity, :company, :location, now(), now())");
 
     return $statement->execute($data);
   }
 
-  public function update($data){
-    $statement = $this->pdo->prepare("UPDATE items SET quantity = 35 WHERE sku = LG345678");
+  public function update($data, $type){
+
+    if ($type == 'minus') {
+      $statement = $this->pdo->prepare("UPDATE items SET quantity = quantity - :number WHERE sku =:sku");
+    }
+
+    if ($type == 'plus') {
+      $statement = $this->pdo->prepare("UPDATE items SET quantity = quantity + :number WHERE sku =:sku");
+    }
+
+    if ($type == 'equal') {
+      $statement = $this->pdo->prepare("UPDATE items SET quantity = :number WHERE sku =:sku");
+    }
+    // $statement = $this->pdo->prepare("UPDATE items SET quantity = :number WHERE sku =:sku");
 
     return $statement->execute($data);
   }
